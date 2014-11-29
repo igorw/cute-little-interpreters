@@ -25,7 +25,7 @@ $code = preg_split('/\s+/', '
 
 $labels = [];
 foreach ($code as $ip => $instr) {
-	if (preg_match('/label\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$labels[$label] = $ip;
 	}
@@ -43,13 +43,13 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/jmp\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^jmp\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$ip = $labels[$label];
 		continue;
 	}
 
-	if (preg_match('/je\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^je\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$b = $stack->pop();
 		$a = $stack->pop();
@@ -59,7 +59,7 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/jnz\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^jnz\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		if ($stack->pop() !== 0) {
 			$ip = $labels[$label];
@@ -67,14 +67,14 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/call\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^call\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$calls->push($ip);
 		$ip = $labels[$label];
 		continue;
 	}
 
-	if (preg_match('/label\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
 		// noop
 		continue;
 	}

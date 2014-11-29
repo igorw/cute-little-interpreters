@@ -10,7 +10,7 @@ $code = preg_split('/\s/', '
 
 $labels = [];
 foreach ($code as $ip => $instr) {
-	if (preg_match('/label\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$labels[$label] = $ip;
 	}
@@ -27,7 +27,7 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/jnz\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^jnz\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		if ($stack->pop() !== 0) {
 			$ip = $labels[$label];
@@ -35,7 +35,7 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/label\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
 		// noop
 		continue;
 	}

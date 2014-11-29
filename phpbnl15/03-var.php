@@ -36,7 +36,7 @@ $code = preg_split('/\s/', preg_replace('/^\s?#.*$/m', '', '
 
 $labels = [];
 foreach ($code as $ip => $instr) {
-	if (preg_match('/label\((.+)\)/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
 		$labels[$label] = $ip;
 	}
