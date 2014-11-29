@@ -1,16 +1,16 @@
 <?php
 
-$code = preg_split('/\s/', '10 100 108 114 111 119 32 44 111 108 108 101 104 . . . . . . . . . . . . .');
+$ops = preg_split('/\s/', '10 100 108 114 111 119 32 44 111 108 108 101 104 . . . . . . . . . . . . .');
 
 $stack = new SplStack();
 
-foreach ($code as $instr) {
-	if (is_numeric($instr)) {
-		$stack->push((int) $instr);
+foreach ($ops as $op) {
+	if (is_numeric($op)) {
+		$stack->push((int) $op);
 		continue;
 	}
 
-	switch ($instr) {
+	switch ($op) {
 		case '+':
 			$b = $stack->pop();
 			$a = $stack->pop();

@@ -1,16 +1,18 @@
 <?php
 
-$code = preg_split('/\s/', '
+$code = '
 	0 10 100 108 114 111 119 32 44 111 108 108 101 104
 	label(print_char)
 		.
 		dup
 		jnz(print_char)
-', -1, PREG_SPLIT_NO_EMPTY);
+';
+
+$ops = preg_split('/\s/', $code, -1, PREG_SPLIT_NO_EMPTY);
 
 $labels = [];
-foreach ($code as $ip => $instr) {
-	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
+foreach ($ops as $ip => $op) {
+	if (preg_match('/^label\((.+)\)$/', $op, $match)) {
 		$label = $match[1];
 		$labels[$label] = $ip;
 	}
@@ -19,15 +21,15 @@ foreach ($code as $ip => $instr) {
 $ip = 0;
 $stack = new SplStack();
 
-while ($ip < count($code)) {
-	$instr = $code[$ip++];
+while ($ip < count($ops)) {
+	$op = $ops[$ip++];
 
-	if (is_numeric($instr)) {
-		$stack->push((int) $instr);
+	if (is_numeric($op)) {
+		$stack->push((int) $op);
 		continue;
 	}
 
-	if (preg_match('/^jnz\((.+)\)$/', $instr, $match)) {
+	if (preg_match('/^jnz\((.+)\)$/', $op, $match)) {
 		$label = $match[1];
 		if ($stack->pop() !== 0) {
 			$ip = $labels[$label];
@@ -35,12 +37,12 @@ while ($ip < count($code)) {
 		continue;
 	}
 
-	if (preg_match('/^label\((.+)\)$/', $instr, $match)) {
+	if (preg_match('/^label\((.+)\)$/', $op, $match)) {
 		// noop
 		continue;
 	}
 
-	switch ($instr) {
+	switch ($op) {
 		case '+':
 			$b = $stack->pop();
 			$a = $stack->pop();
@@ -58,7 +60,7 @@ while ($ip < count($code)) {
 			$stack->push($stack->top());
 			break;
 		default:
-			throw new InvalidArgumentException("Undefined instruction: $instr");
+			throw new InvalidArgumentException("Undefined instruction: $op");
 			break;
 	}
 }
