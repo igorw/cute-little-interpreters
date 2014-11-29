@@ -22,8 +22,15 @@ $code = preg_split('/\s/', preg_replace('/^\s*#.*$/m', '', '
 			ret
 
 	label(start)
-		0 call(fib)
-		1 call(fib)
+		0 !var(i)
+
+		label(loop)
+			var(i) .num 32 .
+			var(i) call(fib) .num 10 .
+
+			# i++
+			var(i) 1 + !var(i)
+			var(i) 10 - jnz(loop)
 '), -1, PREG_SPLIT_NO_EMPTY);
 
 $labels = [];
@@ -73,7 +80,7 @@ while ($ip < count($code)) {
 
 	if (preg_match('/^call\((.+)\)$/', $instr, $match)) {
 		$label = $match[1];
-		$calls->push($ip);
+		$calls->push([$ip, $vars]);
 		$ip = $labels[$label];
 		continue;
 	}
@@ -116,7 +123,7 @@ while ($ip < count($code)) {
 			$stack->push($stack->top());
 			break;
 		case 'ret':
-			$ip = $calls->pop();
+			list($ip, $vars) = $calls->pop();
 			break;
 		default:
 			throw new InvalidArgumentException("Undefined instruction: $instr");

@@ -1,6 +1,6 @@
 <?php
 
-$code = preg_split('/\s/', preg_replace('/^\s?#.*$/m', '', '
+$code = preg_split('/\s/', preg_replace('/^\s*#.*$/m', '', '
 	# define vars
 	0 !var(i)
 	0 !var(p)
