@@ -1,6 +1,7 @@
 <?php
 
-$ops = preg_split('/\s/', '1 2 +');
+$code = '1 2 +';
+$ops = preg_split('/\s/', $code);
 
 $stack = new SplStack();
 

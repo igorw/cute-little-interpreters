@@ -2,10 +2,11 @@
 
 $code = '
 	0 10 100 108 114 111 119 32 44 111 108 108 101 104
-	label(print_char)
+	label(loop)
+		dup jz(end)
 		.
-		dup
-		jnz(print_char)
+		jmp(loop)
+	label(end)
 ';
 
 $ops = preg_split('/\s/', $code, -1, PREG_SPLIT_NO_EMPTY);
@@ -29,9 +30,15 @@ while ($ip < count($ops)) {
 		continue;
 	}
 
-	if (preg_match('/^jnz\((.+)\)$/', $op, $match)) {
+	if (preg_match('/^jmp\((.+)\)$/', $op, $match)) {
 		$label = $match[1];
-		if ($stack->pop() !== 0) {
+		$ip = $labels[$label];
+		continue;
+	}
+
+	if (preg_match('/^jz\((.+)\)$/', $op, $match)) {
+		$label = $match[1];
+		if ($stack->pop() === 0) {
 			$ip = $labels[$label];
 		}
 		continue;
