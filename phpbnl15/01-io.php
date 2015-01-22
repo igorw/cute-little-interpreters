@@ -1,5 +1,8 @@
 <?php
 
+// whoops, popped in wrong order
+// $code = '72 73 10 . . .';
+
 $code = '72 . 73 . 10 .';
 $ops = explode(' ', $code);
 

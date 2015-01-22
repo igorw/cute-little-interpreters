@@ -18,6 +18,7 @@ foreach ($ops as $op) {
 			array_push($stack, $a + $b);
 			break;
 		case '-':
+			// potential pitfall: reverse order
 			$b = array_pop($stack);
 			$a = array_pop($stack);
 			array_push($stack, $a - $b);
