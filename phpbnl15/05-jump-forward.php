@@ -1,16 +1,22 @@
 <?php
 
-// stack overflow => memory exhaustion
-// $code = 'label:x 1 jump:x';
-
-// jump forward... fails
-// $code = 'jump:x 1 label:x';
-
-$code = '1 label:x 1 + jump:x';
+$code = 'jump:x 1 label:x';
 $ops = explode(' ', $code);
 
-// some labels hereeeeee
 $labels = [];
+
+foreach ($ops as $ip => $op) {
+    // look, it's copy-pasted from the other place
+    if (strpos($op, ':') !== false) {
+        list($command, $label) = explode(':', $op);
+        switch ($command) {
+            case 'label':
+                $labels[$label] = $ip;
+                break;
+        }
+        continue;
+    }
+}
 
 $stack = [];
 $ip = 0;
@@ -26,14 +32,9 @@ while ($ip < count($ops)) {
         continue;
     }
 
-    // strpos(haystack, needle)
     if (strpos($op, ':') !== false) {
         list($command, $label) = explode(':', $op);
         switch ($command) {
-            // LOOK AT THE DUALITY
-            case 'label':
-                $labels[$label] = $ip;
-                break;
             case 'jump':
                 $ip = $labels[$label];
                 break;
