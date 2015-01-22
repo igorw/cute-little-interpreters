@@ -1,29 +1,29 @@
 <?php
 
 $code = '1 2 +';
-$ops = preg_split('/\s/', $code);
+$ops = explode(' ', $code);
 
-$stack = new SplStack();
+$stack = [];
 
 foreach ($ops as $op) {
 	if (is_numeric($op)) {
-		$stack->push((int) $op);
+		array_push($stack, (int) $op);
 		continue;
 	}
 
 	switch ($op) {
 		case '+':
-			$b = $stack->pop();
-			$a = $stack->pop();
-			$stack->push($a + $b);
+			$b = array_pop($stack);
+			$a = array_pop($stack);
+			array_push($stack, $a + $b);
 			break;
 		case '-':
-			$b = $stack->pop();
-			$a = $stack->pop();
-			$stack->push($a - $b);
+			$b = array_pop($stack);
+			$a = array_pop($stack);
+			array_push($stack, $a - $b);
 			break;
 	}
 }
 
-var_dump($stack->top());
-// var_dump(array_reverse(iterator_to_array($stack)));
+// var_dump($stack);
+var_dump(array_pop($stack));
