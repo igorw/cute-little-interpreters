@@ -1,13 +1,15 @@
 <?php
 
-$code = '1 2 + 3 4 + +';
+$code = '1 1 + -4 jump';
 $ops = explode(' ', $code);
 
 $stack = [];
+$ip = 0;
 
-// look! $ip is the index into the ops
-// it's the instruction pointer!
-foreach ($ops as $ip => $op) {
+while ($ip < count($ops)) {
+    $op = $ops[$ip];
+    $ip++;
+
     echo "$ip:\t$op\t".json_encode($stack)."\n";
 
     if (is_numeric($op)) {
@@ -34,7 +36,11 @@ foreach ($ops as $ip => $op) {
             array_push($stack, $top);
             array_push($stack, $top);
             break;
-        // default case for missing instructions!
+        // new instruction
+        case 'jump':
+            $offset = array_pop($stack);
+            $ip += $offset;
+            break;
         default:
             throw new \RuntimeException("Invalid operation $op at $ip");
             break;

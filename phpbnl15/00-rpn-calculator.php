@@ -3,6 +3,8 @@
 $code = '1 2 +';
 $ops = explode(' ', $code);
 
+// var_dump($ops);
+
 $stack = [];
 
 foreach ($ops as $op) {

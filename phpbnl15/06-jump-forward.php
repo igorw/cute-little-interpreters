@@ -1,17 +1,44 @@
 <?php
 
-$code = '1 2 + 3 4 + +';
+$code = 'jump:x 1 label:x';
 $ops = explode(' ', $code);
 
-$stack = [];
+$labels = [];
 
-// look! $ip is the index into the ops
-// it's the instruction pointer!
 foreach ($ops as $ip => $op) {
+    // look, it's copy-pasted from the other place
+    if (strpos($op, ':') !== false) {
+        list($command, $label) = explode(':', $op);
+        switch ($command) {
+            case 'label':
+                $labels[$label] = $ip;
+                break;
+        }
+        continue;
+    }
+}
+
+$stack = [];
+$ip = 0;
+
+while ($ip < count($ops)) {
+    $op = $ops[$ip];
+    $ip++;
+
     echo "$ip:\t$op\t".json_encode($stack)."\n";
 
     if (is_numeric($op)) {
         array_push($stack, (int) $op);
+        continue;
+    }
+
+    if (strpos($op, ':') !== false) {
+        list($command, $label) = explode(':', $op);
+        switch ($command) {
+            case 'jump':
+                $ip = $labels[$label];
+                break;
+        }
         continue;
     }
 
@@ -34,7 +61,6 @@ foreach ($ops as $ip => $op) {
             array_push($stack, $top);
             array_push($stack, $top);
             break;
-        // default case for missing instructions!
         default:
             throw new \RuntimeException("Invalid operation $op at $ip");
             break;

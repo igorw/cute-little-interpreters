@@ -60,6 +60,9 @@ while ($ip < count($ops)) {
             array_push($stack, $top);
             array_push($stack, $top);
             break;
+        default:
+            throw new \RuntimeException("Invalid operation $op at $ip");
+            break;
     }
 }
 

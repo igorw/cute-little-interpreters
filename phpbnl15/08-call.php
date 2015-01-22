@@ -1,7 +1,21 @@
 <?php
 
-$code = 'jump:x 1 label:x';
-$ops = explode(' ', $code);
+$code = '
+jump:main
+
+label:prn
+    dup .num .newline
+    ret
+
+label:main    
+    10
+    call:prn
+    label:x
+        1 -
+        call:prn
+        dup jumpnz:x
+';
+$ops = preg_split('/\s+/', trim($code));
 
 $labels = [];
 
@@ -21,11 +35,14 @@ foreach ($ops as $ip => $op) {
 $stack = [];
 $ip = 0;
 
+// new data structure
+$calls = [];
+
 while ($ip < count($ops)) {
     $op = $ops[$ip];
     $ip++;
 
-    echo "$ip:\t$op\t".json_encode($stack)."\n";
+    // echo "$ip:\t$op\t".json_encode($stack)."\n";
 
     if (is_numeric($op)) {
         array_push($stack, (int) $op);
@@ -36,6 +53,17 @@ while ($ip < count($ops)) {
         list($command, $label) = explode(':', $op);
         switch ($command) {
             case 'jump':
+                $ip = $labels[$label];
+                break;
+            case 'jumpnz':
+                $cond = array_pop($stack);
+                if ($cond) {
+                    $ip = $labels[$label];
+                }
+                break;
+            // new instruction
+            case 'call':
+                array_push($calls, $ip);
                 $ip = $labels[$label];
                 break;
         }
@@ -56,10 +84,23 @@ while ($ip < count($ops)) {
         case '.':
             echo chr(array_pop($stack));
             break;
+        case '.num':
+            echo array_pop($stack);
+            break;
+        case '.newline':
+            echo "\n";
+            break;
         case 'dup':
             $top = array_pop($stack);
             array_push($stack, $top);
             array_push($stack, $top);
+            break;
+        // new instruction
+        case 'ret':
+            $ip = array_pop($calls);
+            break;
+        default:
+            throw new \RuntimeException("Invalid operation $op at $ip");
             break;
     }
 }
