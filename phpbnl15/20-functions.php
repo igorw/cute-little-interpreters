@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 
 $code = <<<'CODE'
 function id($a) {
+    backtrace();
     return $a + 1;
 }
 function main() {
@@ -83,10 +84,20 @@ while (end($stack)->ip < count(end($stack)->ops)) {
             $frame->argStack[] = $frame->heap[$op["address"]];
             break;
         case 'funcCall':
+            if ($op["name"] == "backtrace") {
+                echo "\nBacktrace\n";
+                foreach (array_reverse($stack) as $id => $subframe) {
+                    echo "$id: Function {$subframe->functionName}(";
+                    echo implode(",", $subframe->args);
+                    echo "): {$subframe->ip}\n"; 
+                }
+                break;
+            }
             $newFrame = new StackFrame($op["name"], $functions[$op["name"]], $op["result"]);
             $idx = 0;
             foreach ($frame->argStack as $arg) {
-                $newFrame->heap[++$idx] = $arg;
+                $newFrame->args[++$idx] = $arg;
+                $newFrame->heap[$idx] = $arg;
             }
             $frame->argStack = [];
             $stack[] = $newFrame;
@@ -234,6 +245,7 @@ class StackFrame {
     public $returnOffset;
     public $ops = [];
     public $argStack = [];
+    public $args = [];
 
     public function __construct($name, array $ops, $returnOffset) {
         $this->functionName = $name;
