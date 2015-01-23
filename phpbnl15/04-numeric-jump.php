@@ -1,5 +1,28 @@
 <?php
 
+// TURING MACHINES OMG
+
+// ALAN FUCKING TURING
+// pretty much invented theoretical computer science in 1936
+// built some of the first computers in manchester
+// helped the polish crack the enigma code and destroy the nazi empire
+
+// wrote a paper about turing machines
+// ok he did not call them that
+// hilbert problems
+// decidability
+// etc.
+
+// remember infinite loops?
+
+// THE HALTING PROBLEM
+
+// limiting factor
+// limitless factor!!!
+// systems that emulate each other
+
+// church-turing thesis
+
 $code = '1 1 + -4 jump';
 $ops = explode(' ', $code);
 
