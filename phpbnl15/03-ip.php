@@ -1,5 +1,23 @@
 <?php
 
+// DEBUGGING
+
+// LOL ever had a program that did not do what you expected it to?
+// you were wrong
+// the computer is always right
+
+// interpreters are loops with switch statements in them
+// loops are notoriously hard to debug
+
+// ever had a loop or a recursion go in an infinite loop?
+// this is because loops are notoriously difficult
+
+// how do you debug such a program?
+
+// LOL PRINT STATEMENTS
+// debugger, step through
+// look at instruction and stack
+
 $code = '1 2 + 3 4 + +';
 $ops = explode(' ', $code);
 

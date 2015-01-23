@@ -1,5 +1,33 @@
 <?php
 
+// LABELS
+
+// numeric jumps are really hard to get right
+// be it off-by 1, off-by 2 or in this case off by -3 errors
+// are common
+
+// what really helps is to give names to memory locations
+// that's basically what variables are
+// but we will name indexes in the operations
+
+// we do that using labels
+// labels are just an assoc array from names to offsets in $ops
+
+// this way, we can jump to a named location instead of
+// having to use -3 or some other strange number
+
+// (we have labels in PHP but don't tell anyone (thanks sara))
+
+// we introduce two new instructions:
+// * label:<name>
+// * jump:<name>
+
+// label declares a label
+// jump will jump back to that label
+
+// JUMP == GOTO deal with it
+
+
 // stack overflow => memory exhaustion
 // $code = 'label:x 1 jump:x';
 
