@@ -4,7 +4,7 @@ $code = '
 jump:main
 
 label:prn
-    dup .num .newline
+    dup .num .nl
     ret
 
 label:main    
@@ -87,7 +87,7 @@ while ($ip < count($ops)) {
         case '.num':
             echo array_pop($stack);
             break;
-        case '.newline':
+        case '.nl':
             echo "\n";
             break;
         case 'dup':

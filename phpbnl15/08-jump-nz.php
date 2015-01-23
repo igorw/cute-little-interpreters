@@ -21,10 +21,10 @@
 
 $code = '
     10
-    dup .num .newline
+    dup .num .nl
     label:x
         1 -
-        dup .num .newline
+        dup .num .nl
         dup jumpnz:x
 ';
 $ops = preg_split('/\s+/', trim($code));
@@ -93,7 +93,7 @@ while ($ip < count($ops)) {
         case '.num':
             echo array_pop($stack);
             break;
-        case '.newline':
+        case '.nl':
             echo "\n";
             break;
         case 'dup':
